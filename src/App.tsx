@@ -1,15 +1,16 @@
-import { LoginForm } from "@/components/login-form"
+import { Routes, Route } from "react-router-dom"
+import Page1 from "./components/page-1"
+import Page2 from "./components/page-2"
 
 function App() {
-
   return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <LoginForm />
-      </div>
-    </div>
+    <>
+      <Routes>
+        <Route path="/registro-pedido" element={<Page1 />} />
+        <Route path="/registro-destinatario" element={<Page2 />} />
+      </Routes>
+    </>
   )
-
 }
 
 export default App
