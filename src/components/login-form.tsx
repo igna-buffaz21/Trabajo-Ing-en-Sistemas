@@ -14,52 +14,103 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { use, useEffect, useState } from "react"
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+
+  const [valorPedido, setValorPedido] = useState<number>(0);
+  const [altura, setAltura] = useState<number>(0);
+  const [ancho, setAncho] = useState<number>(0);
+  const [largo, setLargo] = useState<number>(0);
+  const [peso, setPeso] = useState<number>(0);
+
+  function calcularPrecio(e: React.FormEvent) {
+    e.preventDefault(); // 👈 evita el reload automático
+
+    if (altura > 0 && ancho > 0 && largo > 0 && peso > 0) {
+      const pesoVolumetrico = (ancho * altura * largo) / 5000;
+      const pesoFacturable = Math.max(peso, pesoVolumetrico);
+    
+      const tarifaBase = 1000;
+      const costoPorKg = 250;
+
+      console.log("El precio del envío es: " + (tarifaBase + pesoFacturable * costoPorKg));
+    
+      return tarifaBase + pesoFacturable * costoPorKg;
+    }
+    else {
+      alert("Por favor, complete todos los campos con valores válidos.");
+      return 0;
+    }
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
+          <CardTitle>Registrar datos del pedido</CardTitle>
         </CardHeader>
         <CardContent>
           <form>
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <FieldLabel htmlFor="valor">Valor del pedido</FieldLabel>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
+                  id="valor-pedido"
+                  type="number"
+                  onChange={(e) => setValorPedido(Number(e.target.value))}
+                  placeholder="ingrese el valor del pedido"
                   required
                 />
               </Field>
               <Field>
-                <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
-                <Input id="password" type="password" required />
+                <FieldLabel htmlFor="altura">Altura</FieldLabel>
+                <Input
+                  id="altura-pedido"
+                  type="number"
+                  onChange={(e) => setAltura(Number(e.target.value))}
+                  placeholder="ingrese la altura en cm"
+                  required
+                />
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
-                <Button variant="outline" type="button">
-                  Login with Google
-                </Button>
-                <FieldDescription className="text-center">
-                  Don&apos;t have an account? <a href="#">Sign up</a>
-                </FieldDescription>
+                <FieldLabel htmlFor="ancho">Ancho</FieldLabel>
+                <Input
+                  id="ancho-pedido"
+                  type="number"
+                  onChange={(e) => setAncho(Number(e.target.value))}
+                  placeholder="ingrese el ancho en cm"
+                  required
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="largo">Largo</FieldLabel>
+                <Input
+                  id="largo-pedido"
+                  type="number"
+                  onChange={(e) => setLargo(Number(e.target.value))}
+                  placeholder="ingrese el largo en cm"
+                  required
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="peso">Peso</FieldLabel>
+                <Input
+                  id="peso-pedido"
+                  type="number"
+                  onChange={(e) => setPeso(Number(e.target.value))}
+                  placeholder="ingrese el peso en kg"
+                  required
+                />
+              </Field>
+              <Field>
+                <Button 
+                type="submit"
+                onClick={calcularPrecio}
+                >Calcular Tarifa</Button>
               </Field>
             </FieldGroup>
           </form>
